@@ -70,12 +70,52 @@
     .job:last-child {
       border-bottom: none;
     }
+    .hidden {
+      display: none;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      padding: 10px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      padding: 5px 10px;
+    }
+    .navbar a:hover {
+      background-color: #555;
+      border-radius: 5px;
+    }
+    .navbar button {
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .navbar button:hover {
+      background-color: #555;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>Recruitment Platform</h1>
   </header>
+
+  <div class="navbar">
+    <div>
+      <a href="#" onclick="showSection('register')">Register</a>
+      <a href="#" onclick="showSection('login')">Login</a>
+      <a href="#" onclick="showSection('post-job')" class="hidden" id="post-job-link">Post Job</a>
+    </div>
+    <button onclick="logout()" class="hidden" id="logout-button">Logout</button>
+  </div>
 
   <div class="container">
     <section id="register" class="form-container">
@@ -90,7 +130,14 @@
       <button onclick="registerUser()">Register</button>
     </section>
 
-    <section id="post-job" class="form-container">
+    <section id="login" class="form-container hidden">
+      <h2>Login</h2>
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-password" placeholder="Password" required>
+      <button onclick="loginUser()">Login</button>
+    </section>
+
+    <section id="post-job" class="form-container hidden">
       <h2>Post a Job</h2>
       <input type="text" id="job-title" placeholder="Job Title" required>
       <textarea id="job-description" placeholder="Job Description" required></textarea>
@@ -108,6 +155,13 @@
   <script>
     const apiUrl = 'http://localhost:5000/api'; // Update with your backend URL
 
+    function showSection(sectionId) {
+      document.querySelectorAll('.form-container').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
+    }
+
     async function registerUser() {
       const name = document.getElementById('reg-name').value;
       const email = document.getElementById('reg-email').value;
@@ -123,6 +177,7 @@
 
         if (response.ok) {
           alert('User registered successfully!');
+          showSection('login');
         } else {
           alert('Error registering user');
         }
@@ -132,20 +187,50 @@
       }
     }
 
+    async function loginUser() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const response = await fetch(`${apiUrl}/users/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('user', JSON.stringify(data.user));
+          localStorage.setItem('token', data.token);
+          alert('User logged in successfully!');
+          document.getElementById('post-job-link').classList.remove('hidden');
+          document.getElementById('logout-button').classList.remove('hidden');
+          showSection('jobs');
+        } else {
+          alert('Error logging in');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while logging in.');
+      }
+    }
+
     async function postJob() {
       const title = document.getElementById('job-title').value;
       const description = document.getElementById('job-description').value;
       const company = document.getElementById('job-company').value;
       const location = document.getElementById('job-location').value;
 
-      // Replace with actual user ID after implementing user login
-      const postedBy = "replace_with_user_id";
+      const user = JSON.parse(localStorage.getItem('user'));
 
       try {
         const response = await fetch(`${apiUrl}/jobs`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, description, company, location, postedBy })
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ title, description, company, location, postedBy: user._id })
         });
 
         if (response.ok) {
@@ -184,6 +269,15 @@
         console.error('Error:', error);
         alert('An error occurred while fetching jobs.');
       }
+    }
+
+    function logout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      alert('Logged out successfully!');
+      document.getElementById('post-job-link').classList.add('hidden');
+      document.getElementById('logout-button').classList.add('hidden');
+      showSection('login');
     }
 
     document.addEventListener('DOMContentLoaded', fetchJobs);
