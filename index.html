@@ -1,197 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recruitment Platform</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .job-listing, .user-form, .job-form {
-            margin-bottom: 20px;
-        }
-        .job-listing h2, .user-form h2, .job-form h2 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .job {
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
-        }
-        .job:last-child {
-            border-bottom: none;
-        }
-        .job h3 {
-            margin: 0;
-            color: #333;
-        }
-        .job p {
-            margin: 5px 0;
-        }
-        .form-group {
-            margin-bottom: 10px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #555;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruitment Platform</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 15px 0;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    .container {
+      width: 80%;
+      margin: auto;
+      overflow: hidden;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px #ccc;
+      margin-top: 20px;
+    }
+    .form-container {
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #f9f9f9;
+      box-shadow: 0 0 10px #ccc;
+    }
+    .form-container h2 {
+      margin-top: 0;
+    }
+    .form-container input,
+    .form-container textarea,
+    .form-container select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .form-container button {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .form-container button:hover {
+      background-color: #555;
+    }
+    .jobs-container {
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px #ccc;
+    }
+    .job {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    .job:last-child {
+      border-bottom: none;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Recruitment Platform</h1>
-    </header>
-    <div class="container">
-        <div class="user-form">
-            <h2>Register User</h2>
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name">
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password">
-            </div>
-            <button onclick="registerUser()">Register</button>
-        </div>
+  <header>
+    <h1>Recruitment Platform</h1>
+  </header>
 
-        <div class="job-form">
-            <h2>Post a Job</h2>
-            <div class="form-group">
-                <label for="job-title">Job Title</label>
-                <input type="text" id="job-title">
-            </div>
-            <div class="form-group">
-                <label for="job-description">Description</label>
-                <textarea id="job-description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="company">Company</label>
-                <input type="text" id="company">
-            </div>
-            <div class="form-group">
-                <label for="location">Location</label>
-                <input type="text" id="location">
-            </div>
-            <div class="form-group">
-                <label for="postedBy">Posted By (User ID)</label>
-                <input type="text" id="postedBy">
-            </div>
-            <button onclick="postJob()">Post Job</button>
-        </div>
+  <div class="container">
+    <section id="register" class="form-container">
+      <h2>Register</h2>
+      <input type="text" id="reg-name" placeholder="Name" required>
+      <input type="email" id="reg-email" placeholder="Email" required>
+      <input type="password" id="reg-password" placeholder="Password" required>
+      <select id="reg-role">
+        <option value="recruiter">Recruiter</option>
+        <option value="applicant">Applicant</option>
+      </select>
+      <button onclick="registerUser()">Register</button>
+    </section>
 
-        <div class="job-listing">
-            <h2>Job Listings</h2>
-            <div id="jobs"></div>
-        </div>
-    </div>
+    <section id="post-job" class="form-container">
+      <h2>Post a Job</h2>
+      <input type="text" id="job-title" placeholder="Job Title" required>
+      <textarea id="job-description" placeholder="Job Description" required></textarea>
+      <input type="text" id="job-company" placeholder="Company" required>
+      <input type="text" id="job-location" placeholder="Location" required>
+      <button onclick="postJob()">Post Job</button>
+    </section>
 
-    <script>
-        async function registerUser() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+    <section id="jobs" class="jobs-container">
+      <h2>Job Listings</h2>
+      <div id="jobs-list"></div>
+    </section>
+  </div>
 
-            const response = await fetch('http://localhost:5000/api/users/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, email, password })
-            });
+  <script>
+    const apiUrl = 'http://localhost:5000/api'; // Update with your backend URL
 
-            const data = await response.json();
-            if (response.ok) {
-                alert('User registered successfully!');
-            } else {
-                alert('Error: ' + data.message);
-            }
+    async function registerUser() {
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const role = document.getElementById('reg-role').value;
+
+      try {
+        const response = await fetch(`${apiUrl}/users/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, role })
+        });
+
+        if (response.ok) {
+          alert('User registered successfully!');
+        } else {
+          alert('Error registering user');
         }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while registering the user.');
+      }
+    }
 
-        async function postJob() {
-            const title = document.getElementById('job-title').value;
-            const description = document.getElementById('job-description').value;
-            const company = document.getElementById('company').value;
-            const location = document.getElementById('location').value;
-            const postedBy = document.getElementById('postedBy').value;
+    async function postJob() {
+      const title = document.getElementById('job-title').value;
+      const description = document.getElementById('job-description').value;
+      const company = document.getElementById('job-company').value;
+      const location = document.getElementById('job-location').value;
 
-            const response = await fetch('http://localhost:5000/api/jobs', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ title, description, company, location, postedBy })
-            });
+      // Replace with actual user ID after implementing user login
+      const postedBy = "replace_with_user_id";
 
-            const data = await response.json();
-            if (response.ok) {
-                alert('Job posted successfully!');
-                fetchJobs();
-            } else {
-                alert('Error: ' + data.message);
-            }
+      try {
+        const response = await fetch(`${apiUrl}/jobs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, description, company, location, postedBy })
+        });
+
+        if (response.ok) {
+          alert('Job posted successfully!');
+          fetchJobs(); // Refresh job list
+        } else {
+          alert('Error posting job');
         }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while posting the job.');
+      }
+    }
 
-        async function fetchJobs() {
-            const response = await fetch('http://localhost:5000/api/jobs');
-            const jobs = await response.json();
-            const jobsContainer = document.getElementById('jobs');
-            jobsContainer.innerHTML = '';
+    async function fetchJobs() {
+      try {
+        const response = await fetch(`${apiUrl}/jobs`);
+        const jobs = await response.json();
 
-            jobs.forEach(job => {
-                const jobElement = document.createElement('div');
-                jobElement.classList.add('job');
-                jobElement.innerHTML = `
-                    <h3>${job.title}</h3>
-                    <p>${job.description}</p>
-                    <p>${job.company}</p>
-                    <p>${job.location}</p>
-                    <p>Posted by: ${job.postedBy.name} (${job.postedBy.email})</p>
-                `;
-                jobsContainer.appendChild(jobElement);
-            });
-        }
+        const jobsList = document.getElementById('jobs-list');
+        jobsList.innerHTML = '';
 
-        // Fetch jobs on page load
-        fetchJobs();
-    </script>
+        jobs.forEach(job => {
+          const jobElement = document.createElement('div');
+          jobElement.classList.add('job');
+          jobElement.innerHTML = `
+            <h3>${job.title}</h3>
+            <p>${job.description}</p>
+            <p><strong>Company:</strong> ${job.company}</p>
+            <p><strong>Location:</strong> ${job.location}</p>
+            <p><strong>Posted by:</strong> ${job.postedBy.name} (${job.postedBy.email})</p>
+          `;
+          jobsList.appendChild(jobElement);
+        });
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while fetching jobs.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchJobs);
+  </script>
 </body>
 </html>
